@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Gallery | Kid Scholars</title>
+    <link rel="icon" type="image/png" href="assests/Kj-logo.png">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: #fff;
+        }
+        .events-page-header {
+            padding: 2.5rem 8% 1rem;
+        }
+        .events-page-header h1 {
+            font-size: clamp(1.8rem, 4vw, 2.6rem);
+            margin-bottom: 0.25rem;
+        }
+        .events-page-header p {
+            color: #555;
+        }
+        .events-container {
+            max-width: 1100px;
+            margin: 0 auto 4rem;
+            padding: 1rem 8% 0;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        .event-section {
+            border-radius: 12px;
+            padding: 1rem 1.2rem 1.5rem;
+            background: #fafafa;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+        }
+        .event-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .event-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .event-date {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        .event-description {
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 0.8rem;
+        }
+        /* Masonry-like grid */
+        .event-images-grid {
+            column-count: 3;
+            column-gap: 8px;
+        }
+        .event-images-grid img {
+            width: 100%;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            display: block;
+        }
+        @media (max-width: 900px) {
+            .events-page-header {
+                padding: 2rem 6% 0.5rem;
+            }
+            .events-container {
+                padding: 1rem 6% 0;
+            }
+            .event-images-grid { column-count: 2; }
+        }
+        @media (max-width: 600px) {
+            .event-images-grid { column-count: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">
+            <img class="logo-image" src="assest/Kj-logo.png" alt="Kid Scholars International Playschool logo">
+            <span class="logo-text">Kid Scholars International Playschool</span>
+        </div>
+
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <ul id="nav-menu">
+            <li><a href="index.html#home">Home</a></li>
+            <li><a href="index.html#about">About</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <header class="events-page-header">
+        <h1>Event Gallery</h1>
+        <p>Browse photos from our school events and activities.</p>
+    </header>
+
+    <main>
+        <div id="eventsContainer" class="events-container"></div>
+    </main>
+
+    <a class="whatsapp-float" href="https://wa.me/917200825692" target="_blank" rel="noopener">
+        <img src="assest/whatsapp.png" alt="WhatsApp">
+    </a>
+
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script>
+        const SUPABASE_URL = "https://yuvnljxzhawqymfetkjr.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl1dm5sanh6aGF3cXltZmV0a2pyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5Njg2MTYsImV4cCI6MjA4ODU0NDYxNn0.6tzp1wc7x8Dna4x15oaJy7MuFmLtPLsbadUM2qL1WKg";
+
+        // Use a different name to avoid clashing with the global "supabase" object
+        const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const container = document.getElementById("eventsContainer");
+
+        async function loadEvents() {
+            container.textContent = "Loading events...";
+
+            const { data, error } = await sb
+                .from("events")
+                .select("*")
+                .order("event_date", { ascending: false });
+
+            if (error) {
+                console.error("Error loading events:", error);
+                container.textContent = "Error loading events.";
+                return;
+            }
+
+            if (!data || data.length === 0) {
+                container.textContent = "No events yet.";
+                return;
+            }
+
+            container.innerHTML = "";
+
+            data.forEach((event) => {
+                const section = document.createElement("section");
+                section.className = "event-section";
+
+                const header = document.createElement("div");
+                header.className = "event-header";
+
+                const titleEl = document.createElement("div");
+                titleEl.className = "event-title";
+                titleEl.textContent = event.event_name;
+
+                const dateEl = document.createElement("div");
+                dateEl.className = "event-date";
+                dateEl.textContent = event.event_date;
+
+                header.appendChild(titleEl);
+                header.appendChild(dateEl);
+                section.appendChild(header);
+
+                if (event.description) {
+                    const descEl = document.createElement("div");
+                    descEl.className = "event-description";
+                    descEl.textContent = event.description;
+                    section.appendChild(descEl);
+                }
+
+                const grid = document.createElement("div");
+                grid.className = "event-images-grid";
+
+                const images = Array.isArray(event.images) && event.images.length
+                    ? event.images
+                    : (event.image_url ? [event.image_url] : []);
+
+                images.forEach((url) => {
+                    const img = document.createElement("img");
+                    img.src = url;
+                    img.alt = event.event_name;
+                    grid.appendChild(img);
+                });
+
+                section.appendChild(grid);
+                container.appendChild(section);
+            });
+        }
+
+        loadEvents();
+    </script>
+</body>
+</html>
+
+\

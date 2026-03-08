@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Upload Events | Kid Scholars</title>
+    <link rel="icon" type="image/png" href="assests/Kj-logo.png">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-wrap {
+            max-width: 900px;
+            margin: 2.5rem auto 4rem;
+            padding: 2rem 2.5rem;
+            border-radius: 18px;
+            background: #fff;
+            box-shadow: 0 14px 32px rgba(0,0,0,0.16);
+        }
+        .admin-wrap h1 {
+            font-size: 1.7rem;
+            margin-bottom: 1.2rem;
+        }
+        .admin-form-row {
+            margin-bottom: 1rem;
+        }
+        .admin-form-row label {
+            display: block;
+            margin-bottom: 0.35rem;
+            font-weight: 600;
+        }
+        .admin-form-row input,
+        .admin-form-row textarea {
+            width: 100%;
+            padding: 0.8rem 0.9rem;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            font-size: 0.95rem;
+        }
+        .admin-form-row input[type="file"] {
+            padding: 0.4rem 0;
+        }
+        .admin-actions {
+            margin-top: 1.2rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .admin-status {
+            font-size: 0.9rem;
+            color: #333;
+        }
+        .events-admin-list {
+            margin-top: 2rem;
+            border-top: 1px solid #eee;
+            padding-top: 1.5rem;
+        }
+        .event-admin-card {
+            border-radius: 12px;
+            padding: 1rem 1.2rem 1.2rem;
+            background: #fafafa;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            margin-bottom: 1rem;
+        }
+        .event-admin-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+            flex-wrap: wrap;
+        }
+        .event-admin-header input {
+            padding: 0.5rem 0.6rem;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
+        }
+        .event-admin-actions button {
+            margin-left: 0.5rem;
+        }
+        .event-admin-images {
+            margin-top: 0.5rem;
+        }
+        .event-admin-images-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .event-admin-image {
+            position: relative;
+        }
+        .event-admin-image img {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        .event-admin-image button {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            border: none;
+            background: #e74c3c;
+            color: #fff;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .event-admin-add-photos {
+            font-size: 0.85rem;
+        }
+        @media (max-width: 768px) {
+            .admin-wrap {
+                margin: 2rem 1rem 3rem;
+                padding: 1.5rem 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation (copied from index) -->
+    <nav>
+        <div class="logo">
+            <img class="logo-image" src="assest/Kj-logo.png" alt="Kid Scholars International Playschool logo">
+            <span class="logo-text">Kid Scholars International Playschool</span>
+        </div>
+
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <ul id="nav-menu">
+            <li><a href="index.html#home">Home</a></li>
+            <li><a href="index.html#about">About</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <main class="admin-wrap">
+        <h1>Upload Event</h1>
+
+        <!-- Auth section -->
+        <section id="auth-section" class="admin-auth">
+            <h2 style="font-size:1.1rem;margin-bottom:0.8rem;">Admin Login</h2>
+            <form id="login-form">
+                <div class="admin-form-row">
+                    <label for="adminEmail">Email</label>
+                    <input type="email" id="adminEmail" required>
+                </div>
+                <div class="admin-form-row">
+                    <label for="adminPassword">Password</label>
+                    <input type="password" id="adminPassword" required>
+                </div>
+                <div class="admin-actions">
+                    <button type="submit" id="loginBtn" class="cta-button">Log In</button>
+                    <div id="authStatus" class="admin-status"></div>
+                </div>
+            </form>
+        </section>
+
+        <!-- Upload form (visible only when logged in) -->
+        <form id="event-form" style="display:none;margin-top:1.5rem;">
+            <div class="admin-form-row">
+                <label for="eventName">Event Name</label>
+                <input type="text" id="eventName" required>
+            </div>
+            <div class="admin-form-row">
+                <label for="eventDate">Event Date</label>
+                <input type="date" id="eventDate" required>
+            </div>
+            <div class="admin-form-row">
+                <label for="eventDescription">Description (optional)</label>
+                <textarea id="eventDescription" rows="3" placeholder="Short description (optional)"></textarea>
+            </div>
+            <div class="admin-form-row">
+                <label for="eventPhoto">Event Photos (you can choose multiple)</label>
+                <input type="file" id="eventPhoto" accept="image/*" multiple required>
+            </div>
+            <div class="admin-actions">
+                <button type="button" id="logoutBtn" class="cta-button" style="background:#fff;border-color:#333;">Log Out</button>
+                <button type="submit" id="submitBtn" class="cta-button">Upload Event</button>
+                <div id="status" class="admin-status"></div>
+            </div>
+        </form>
+
+        <section class="events-admin-list">
+            <h2 style="font-size:1.2rem;margin-bottom:0.8rem;">Existing Events</h2>
+            <div id="eventsAdminList"></div>
+        </section>
+    </main>
+
+    <a class="whatsapp-float" href="https://wa.me/917200825692" target="_blank" rel="noopener">
+        <img src="assest/whatsapp.png" alt="WhatsApp">
+    </a>
+
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script>
+        const SUPABASE_URL = "https://yuvnljxzhawqymfetkjr.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl1dm5sanh6aGF3cXltZmV0a2pyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5Njg2MTYsImV4cCI6MjA4ODU0NDYxNn0.6tzp1wc7x8Dna4x15oaJy7MuFmLtPLsbadUM2qL1WKg";
+
+        // Use a different name than the global "supabase" to avoid conflicts
+        const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const authSection = document.getElementById("auth-section");
+        const loginForm = document.getElementById("login-form");
+        const loginBtn = document.getElementById("loginBtn");
+        const authStatusEl = document.getElementById("authStatus");
+        const logoutBtn = document.getElementById("logoutBtn");
+
+        const form = document.getElementById("event-form");
+        const statusEl = document.getElementById("status");
+        const submitBtn = document.getElementById("submitBtn");
+        const eventsAdminList = document.getElementById("eventsAdminList");
+
+        function urlToPath(url) {
+            const marker = "/storage/v1/object/public/event-photos/";
+            const idx = url.indexOf(marker);
+            if (idx === -1) return null;
+            return url.slice(idx + marker.length);
+        }
+
+        async function loadAdminEvents() {
+            const { data, error } = await sb
+                .from("events")
+                .select("*")
+                .order("event_date", { ascending: false });
+
+            if (error) {
+                console.error("Error loading events:", error);
+                eventsAdminList.textContent = "Error loading events.";
+                return;
+            }
+
+            if (!data || data.length === 0) {
+                eventsAdminList.textContent = "No events yet.";
+                return;
+            }
+
+            eventsAdminList.innerHTML = "";
+
+            data.forEach((event) => {
+                const card = document.createElement("div");
+                card.className = "event-admin-card";
+                card.dataset.eventId = event.id;
+
+                const header = document.createElement("div");
+                header.className = "event-admin-header";
+
+                const inputsWrap = document.createElement("div");
+                const nameInput = document.createElement("input");
+                nameInput.value = event.event_name || "";
+                nameInput.placeholder = "Event name";
+                nameInput.dataset.field = "event_name";
+
+                const dateInput = document.createElement("input");
+                dateInput.type = "date";
+                dateInput.value = event.event_date || "";
+                dateInput.dataset.field = "event_date";
+
+                inputsWrap.appendChild(nameInput);
+                inputsWrap.appendChild(dateInput);
+
+                const actionsWrap = document.createElement("div");
+                actionsWrap.className = "event-admin-actions";
+
+                const saveBtn = document.createElement("button");
+                saveBtn.type = "button";
+                saveBtn.textContent = "Save";
+                saveBtn.className = "cta-button save-event";
+
+                const deleteBtn = document.createElement("button");
+                deleteBtn.type = "button";
+                deleteBtn.textContent = "Delete";
+                deleteBtn.className = "cta-button delete-event";
+                deleteBtn.style.background = "#fff";
+                deleteBtn.style.borderColor = "#e74c3c";
+
+                actionsWrap.appendChild(saveBtn);
+                actionsWrap.appendChild(deleteBtn);
+
+                header.appendChild(inputsWrap);
+                header.appendChild(actionsWrap);
+
+                card.appendChild(header);
+
+                const imagesWrap = document.createElement("div");
+                imagesWrap.className = "event-admin-images";
+
+                const grid = document.createElement("div");
+                grid.className = "event-admin-images-grid";
+
+                const images = Array.isArray(event.images) && event.images.length
+                    ? event.images
+                    : (event.image_url ? [event.image_url] : []);
+
+                card.dataset.images = JSON.stringify(images);
+
+                images.forEach((url) => {
+                    const imgWrap = document.createElement("div");
+                    imgWrap.className = "event-admin-image";
+                    imgWrap.dataset.url = url;
+
+                    const img = document.createElement("img");
+                    img.src = url;
+                    img.alt = event.event_name || "Event image";
+
+                    const delBtn = document.createElement("button");
+                    delBtn.type = "button";
+                    delBtn.textContent = "×";
+                    delBtn.className = "delete-image";
+
+                    imgWrap.appendChild(img);
+                    imgWrap.appendChild(delBtn);
+                    grid.appendChild(imgWrap);
+                });
+
+                imagesWrap.appendChild(grid);
+
+                const addLabel = document.createElement("label");
+                addLabel.className = "event-admin-add-photos";
+                addLabel.textContent = "Add more photos: ";
+
+                const addInput = document.createElement("input");
+                addInput.type = "file";
+                addInput.accept = "image/*";
+                addInput.multiple = true;
+                addInput.className = "add-photos-input";
+
+                addLabel.appendChild(addInput);
+                imagesWrap.appendChild(addLabel);
+
+                card.appendChild(imagesWrap);
+
+                eventsAdminList.appendChild(card);
+            });
+        }
+
+        async function refreshAuthUI() {
+            const { data, error } = await sb.auth.getUser();
+            if (error || !data.user) {
+                // Not logged in
+                authSection.style.display = "block";
+                form.style.display = "none";
+                if (eventsAdminList) eventsAdminList.innerHTML = "";
+                authStatusEl.textContent = error ? "Please log in." : "";
+            } else {
+                // Logged in
+                authSection.style.display = "none";
+                form.style.display = "block";
+                statusEl.textContent = "Logged in as: " + (data.user.email || "admin");
+                if (eventsAdminList) loadAdminEvents();
+            }
+        }
+
+        // Handle login
+        loginForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            authStatusEl.textContent = "";
+            loginBtn.disabled = true;
+            loginBtn.textContent = "Logging in...";
+
+            const email = document.getElementById("adminEmail").value.trim();
+            const password = document.getElementById("adminPassword").value;
+
+            const { error } = await sb.auth.signInWithPassword({ email, password });
+            if (error) {
+                authStatusEl.textContent = "Login failed: " + (error.message || "Unknown error");
+            }
+            await refreshAuthUI();
+            loginBtn.disabled = false;
+            loginBtn.textContent = "Log In";
+        });
+
+        // Handle logout
+        logoutBtn.addEventListener("click", async () => {
+            await sb.auth.signOut();
+            statusEl.textContent = "";
+            await refreshAuthUI();
+        });
+
+        // Only allow submit when logged in
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            statusEl.textContent = "";
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Uploading...";
+
+            const eventName = document.getElementById("eventName").value.trim();
+            const eventDate = document.getElementById("eventDate").value;
+            const description = document.getElementById("eventDescription").value.trim();
+            const fileInput = document.getElementById("eventPhoto");
+            const files = Array.from(fileInput.files || []);
+
+            if (!eventName || !eventDate || files.length === 0) {
+                statusEl.textContent = "Please fill all required fields and choose at least one image.";
+                submitBtn.disabled = false;
+                submitBtn.textContent = "Upload Event";
+                return;
+            }
+
+            try {
+                // 1) Upload images to Storage bucket "event-photos"
+                const imageUrls = [];
+                for (const file of files) {
+                    const ext = file.name.split(".").pop();
+                    const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+                    const filePath = fileName;
+
+                    const { error: uploadError } = await sb
+                        .storage
+                        .from("event-photos")
+                        .upload(filePath, file);
+
+                    if (uploadError) {
+                        throw uploadError;
+                    }
+
+                    const { data: publicData } = sb
+                        .storage
+                        .from("event-photos")
+                        .getPublicUrl(filePath);
+
+                    const publicUrl = publicData?.publicUrl;
+                    if (!publicUrl) {
+                        throw new Error("Could not get public URL for image.");
+                    }
+                    imageUrls.push(publicUrl);
+                }
+
+                // 2) Insert event into "events" table
+                const { error: insertError } = await sb
+                    .from("events")
+                    .insert([
+                        {
+                            event_name: eventName,
+                            event_date: eventDate,
+                            image_url: imageUrls[0] || null,
+                            images: imageUrls,
+                            description: description || null
+                        }
+                    ]);
+
+                if (insertError) {
+                    throw insertError;
+                }
+
+                statusEl.textContent = "Event uploaded successfully!";
+                form.reset();
+                if (eventsAdminList) loadAdminEvents();
+            } catch (err) {
+                console.error("Upload error:", err);
+                statusEl.textContent = "Error uploading event: " + (err.message || "Unknown error");
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = "Upload Event";
+            }
+        });
+
+        // Handle clicks on Save/Delete and image deletes
+        if (eventsAdminList) {
+            eventsAdminList.addEventListener("click", async (e) => {
+                const card = e.target.closest(".event-admin-card");
+                if (!card) return;
+                const eventId = card.dataset.eventId;
+
+                if (e.target.classList.contains("save-event")) {
+                    const nameInput = card.querySelector('input[data-field="event_name"]');
+                    const dateInput = card.querySelector('input[data-field="event_date"]');
+                    const newName = nameInput.value.trim();
+                    const newDate = dateInput.value;
+
+                    if (!newName || !newDate) {
+                        alert("Name and date are required.");
+                        return;
+                    }
+
+                    const { error } = await sb
+                        .from("events")
+                        .update({ event_name: newName, event_date: newDate })
+                        .eq("id", eventId);
+
+                    if (error) {
+                        console.error("Error updating event:", error);
+                        alert("Error updating event.");
+                    } else {
+                        alert("Event updated.");
+                        loadAdminEvents();
+                    }
+                }
+
+                if (e.target.classList.contains("delete-event")) {
+                    if (!confirm("Delete this event and all its photos?")) return;
+
+                    let images = [];
+                    try {
+                        images = JSON.parse(card.dataset.images || "[]");
+                    } catch {
+                        images = [];
+                    }
+
+                    const paths = images.map(urlToPath).filter(Boolean);
+                    if (paths.length) {
+                        await sb.storage.from("event-photos").remove(paths);
+                    }
+
+                    const { error } = await sb
+                        .from("events")
+                        .delete()
+                        .eq("id", eventId);
+
+                    if (error) {
+                        console.error("Error deleting event:", error);
+                        alert("Error deleting event.");
+                    } else {
+                        card.remove();
+                    }
+                }
+
+                if (e.target.classList.contains("delete-image")) {
+                    const imgWrap = e.target.closest(".event-admin-image");
+                    if (!imgWrap) return;
+                    const url = imgWrap.dataset.url;
+
+                    let images = [];
+                    try {
+                        images = JSON.parse(card.dataset.images || "[]");
+                    } catch {
+                        images = [];
+                    }
+
+                    images = images.filter((u) => u !== url);
+
+                    const updates = {
+                        images,
+                        image_url: images[0] || null
+                    };
+
+                    const { error } = await sb
+                        .from("events")
+                        .update(updates)
+                        .eq("id", eventId);
+
+                    if (error) {
+                        console.error("Error deleting image:", error);
+                        alert("Error deleting image.");
+                        return;
+                    }
+
+                    const path = urlToPath(url);
+                    if (path) {
+                        await sb.storage.from("event-photos").remove([path]);
+                    }
+
+                    card.dataset.images = JSON.stringify(images);
+                    imgWrap.remove();
+                }
+            });
+
+            // Handle adding more photos
+            eventsAdminList.addEventListener("change", async (e) => {
+                if (!e.target.classList.contains("add-photos-input")) return;
+                const card = e.target.closest(".event-admin-card");
+                if (!card) return;
+                const eventId = card.dataset.eventId;
+                const files = Array.from(e.target.files || []);
+                if (!files.length) return;
+
+                let images = [];
+                try {
+                    images = JSON.parse(card.dataset.images || "[]");
+                } catch {
+                    images = [];
+                }
+
+                try {
+                    for (const file of files) {
+                        const ext = file.name.split(".").pop();
+                        const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+                        const filePath = fileName;
+
+                        const { error: uploadError } = await sb
+                            .storage
+                            .from("event-photos")
+                            .upload(filePath, file);
+
+                        if (uploadError) throw uploadError;
+
+                        const { data: publicData } = sb
+                            .storage
+                            .from("event-photos")
+                            .getPublicUrl(filePath);
+
+                        const publicUrl = publicData?.publicUrl;
+                        if (!publicUrl) throw new Error("Could not get public URL for image.");
+                        images.push(publicUrl);
+                    }
+
+                    const updates = {
+                        images,
+                        image_url: images[0] || null
+                    };
+
+                    const { error } = await sb
+                        .from("events")
+                        .update(updates)
+                        .eq("id", eventId);
+
+                    if (error) {
+                        console.error("Error adding photos:", error);
+                        alert("Error adding photos.");
+                    } else {
+                        card.dataset.images = JSON.stringify(images);
+                        loadAdminEvents();
+                    }
+                } catch (err) {
+                    console.error("Error adding photos:", err);
+                    alert("Error adding photos.");
+                } finally {
+                    e.target.value = "";
+                }
+            });
+        }
+
+        // Initial auth check
+        refreshAuthUI();
+    </script>
+</body>
+</html>
+
