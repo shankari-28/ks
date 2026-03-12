@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,16 +11,20 @@
         body {
             background: #fff;
         }
+
         .events-page-header {
             padding: 2.5rem 8% 1rem;
         }
+
         .events-page-header h1 {
             font-size: clamp(1.8rem, 4vw, 2.6rem);
             margin-bottom: 0.25rem;
         }
+
         .events-page-header p {
             color: #555;
         }
+
         .events-container {
             max-width: 1100px;
             margin: 0 auto 4rem;
@@ -28,12 +33,14 @@
             flex-direction: column;
             gap: 2rem;
         }
+
         .event-section {
             border-radius: 12px;
             padding: 1rem 1.2rem 1.5rem;
             background: #fafafa;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
         }
+
         .event-header {
             display: flex;
             justify-content: space-between;
@@ -41,50 +48,65 @@
             gap: 1rem;
             margin-bottom: 0.5rem;
         }
+
         .event-title {
             font-size: 1.2rem;
             font-weight: bold;
         }
+
         .event-date {
             font-size: 0.9rem;
             color: #666;
         }
+
         .event-description {
             font-size: 0.9rem;
             color: #555;
             margin-bottom: 0.8rem;
         }
+
         /* Masonry-like grid */
         .event-images-grid {
             column-count: 3;
             column-gap: 8px;
         }
+
         .event-images-grid img {
             width: 100%;
             margin-bottom: 8px;
             border-radius: 8px;
             display: block;
         }
+
         @media (max-width: 900px) {
             .events-page-header {
                 padding: 2rem 6% 0.5rem;
             }
+
             .events-container {
                 padding: 1rem 6% 0;
             }
-            .event-images-grid { column-count: 2; }
+
+            .event-images-grid {
+                column-count: 2;
+            }
         }
+
         @media (max-width: 600px) {
-            .event-images-grid { column-count: 1; }
+            .event-images-grid {
+                column-count: 1;
+            }
         }
     </style>
 </head>
+
 <body>
     <!-- Navigation -->
     <nav>
         <div class="logo">
             <img class="logo-image" src="assest/Kj-logo.png" alt="Kid Scholars International Playschool logo">
-            <span class="logo-text">Kid Scholars International Playschool</span>
+            <span class="logo-text">Kid Scholars International Playschool<br><small
+                    style="font-weight:400;font-size:0.75em;opacity:0.75;">A Unit of AJ Academy</small></span>
         </div>
 
         <button class="hamburger" id="hamburger" aria-label="Toggle menu">
@@ -97,6 +119,8 @@
             <li><a href="index.html#home">Home</a></li>
             <li><a href="index.html#about">About</a></li>
             <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="videos.html">Videos</a></li>
+            <li><a href="events.html">Events</a></li>
             <li><a href="index.html#contact">Contact</a></li>
         </ul>
     </nav>
@@ -109,6 +133,13 @@
     <main>
         <div id="eventsContainer" class="events-container"></div>
     </main>
+
+    <!-- Powered by DigiTekEra Credit Strip -->
+    <div class="footer-credit">
+        <a href="https://www.digitekera.com/" target="_blank" rel="noopener">
+            <img src="assest/Powered by DigiTekEra.png" alt="Powered by DigiTekEra">
+        </a>
+    </div>
 
     <a class="whatsapp-float" href="https://wa.me/917200825692" target="_blank" rel="noopener">
         <img src="assest/whatsapp.png" alt="WhatsApp">
@@ -193,6 +224,7 @@
         loadEvents();
     </script>
 </body>
+
 </html>
 
 \

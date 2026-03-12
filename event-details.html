@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Details | Kid Scholars</title>
+    <link rel="icon" type="image/png" href="assests/Kj-logo.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">
+            <img class="logo-image" src="assest/Kj-logo.png" alt="Kid Scholars International Playschool logo">
+            <span class="logo-text">Kid Scholars International Playschool<br><small
+                    style="font-weight:400;font-size:0.75em;opacity:0.75;">A Unit of AJ Academy</small></span>
+        </div>
+
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <ul id="nav-menu">
+            <li><a href="index.html#home">Home</a></li>
+            <li><a href="index.html#about">About</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="videos.html">Videos</a></li>
+            <li><a href="events.html">Events</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <main class="event-details-wrap"
+        style="padding: 2.5rem 8% 4rem; max-width: 1000px; margin: 0 auto; min-height: 60vh;">
+        <div id="eventDetailsContainer">
+            <p>Loading event details...</p>
+        </div>
+    </main>
+
+    <section class="footer">
+        <div class="box-container">
+            <div class="box">
+                <h3>Contact Us</h3>
+                <p><strong>Branch 1:</strong><br>
+                    4C, CCR Garden, Sri Ragavendra Apartment<br>
+                    MGR Road, Vignarajapuram, Medavakkam<br>
+                    Chennai - 600100
+                </p>
+                <p><strong>Branch 2:</strong><br>
+                    8A, Beraka Nagar, Durga Colony<br>
+                    Sembakkam, Chennai - 600073
+                </p>
+            </div>
+            <div class="box">
+                <h3>Quick Links</h3>
+                <a href="index.html#home">Home</a>
+                <a href="index.html#about">About</a>
+                <a href="gallery.html">Gallery</a>
+                <a href="videos.html">Videos</a>
+                <a href="events.html">Events</a>
+                <a href="index.html#contact">Contact</a>
+            </div>
+            <div class="box">
+                <h3>Follow Us</h3>
+                <a href="https://www.facebook.com/kidscholarsschool" target="_blank" rel="noopener"><img
+                        src="assests/fb-logo.png" height="25" alt="Facebook"></a>
+                <a href="https://www.instagram.com/kidscholarsschool" target="_blank" rel="noopener"><img
+                        src="assests/insta-logo.png" height="25" alt="Instagram"></a>
+                <a href="https://www.youtube.com/@kidscholarsschool" target="_blank" rel="noopener"><img
+                        src="assests/youtube-logo.png" height="25" alt="YouTube"></a>
+            </div>
+            <div class="box">
+                <h3>Powered By</h3>
+                <a class="powered-by" href="https://www.digitekera.com/" target="_blank" rel="noopener">
+                    <img src="assest/Powered by DigiTekEra.png" alt="Powered by DigiTekEra">
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Powered by DigiTekEra Credit Strip -->
+    <div class="footer-credit">
+        <a href="https://www.digitekera.com/" target="_blank" rel="noopener">
+            <img src="assest/Powered by DigiTekEra.png" alt="Powered by DigiTekEra">
+        </a>
+    </div>
+
+    <a class="whatsapp-float" href="https://wa.me/917200825692" target="_blank" rel="noopener">
+        <img src="assest/whatsapp.png" alt="WhatsApp">
+    </a>
+
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script>
+        const SUPABASE_URL = "https://yuvnljxzhawqymfetkjr.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl1dm5sanh6aGF3cXltZmV0a2pyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5Njg2MTYsImV4cCI6MjA4ODU0NDYxNn0.6tzp1wc7x8Dna4x15oaJy7MuFmLtPLsbadUM2qL1WKg";
+        const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const container = document.getElementById("eventDetailsContainer");
+
+        async function loadEvent() {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            if (!id) {
+                container.innerHTML = '<p>Event ID not provided in URL.</p>';
+                return;
+            }
+
+            const { data, error } = await sb
+                .from("scheduled_events")
+                .select("*")
+                .eq("id", id)
+                .single();
+
+            if (error) {
+                console.error("Error loading event:", error);
+                if (error.code === 'PGRST116') {
+                    container.innerHTML = '<p>Event not found.</p>';
+                } else {
+                    container.innerHTML = '<p>Error loading event details or the table does not exist yet.</p>';
+                }
+                return;
+            }
+
+            if (!data) {
+                container.innerHTML = '<p>Event not found.</p>';
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="event-details-card">
+                    ${data.image_url ? `<img src="${data.image_url}" alt="${data.title}" class="event-details-hero">` : ''}
+                    <h1 class="event-details-title">${data.title}</h1>
+                    <div class="event-meta">
+                        <p><strong>Date:</strong> ${data.event_date}</p>
+                        <p><strong>Location:</strong> ${data.location || 'TBA'}</p>
+                    </div>
+                    
+                    <div class="event-content-section">
+                        <h3>About the Event</h3>
+                        <p>${data.description || 'No description provided.'}</p>
+                    </div>
+
+                    ${data.curriculum ? `
+                    <div class="event-content-section">
+                        <h3>Curriculum / Schedule</h3>
+                        <p>${data.curriculum.replace(/\n/g, '<br>')}</p>
+                    </div>` : ''}
+
+                    ${data.expert_creator ? `
+                    <div class="event-content-section">
+                        <h3>Expert / Creator</h3>
+                        <p>${data.expert_creator.replace(/\n/g, '<br>')}</p>
+                    </div>` : ''}
+
+                    ${data.gear_requirements ? `
+                    <div class="event-content-section">
+                        <h3>Gear Requirements</h3>
+                        <p>${data.gear_requirements.replace(/\n/g, '<br>')}</p>
+                    </div>` : ''}
+                </div>
+            `;
+        }
+
+        loadEvent();
+    </script>
+</body>
+
+</html>

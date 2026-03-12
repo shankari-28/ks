@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Videos | Kid Scholars International Playschool</title>
+    <meta name="description"
+        content="Watch videos and highlights from Kid Scholars International Playschool activities and events.">
+    <link rel="icon" type="image/png" href="assests/Kj-logo.png">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: #f7f7f9;
+        }
+
+        /* Hero */
+        .vp-hero {
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 55%, #24243e 100%);
+            color: #fff;
+            padding: 6rem 6% 4rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vp-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 30% 60%, rgba(255, 50, 80, 0.12) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .vp-hero-eyebrow {
+            display: inline-block;
+            background: rgba(255, 80, 80, 0.18);
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 80, 80, 0.4);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 0.35rem 1rem;
+            border-radius: 20px;
+            margin-bottom: 1.25rem;
+        }
+
+        .vp-hero h1 {
+            font-size: clamp(2.2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 1rem;
+        }
+
+        .vp-hero p {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 520px;
+            margin: 0 auto;
+        }
+
+        .vp-hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 2.5rem;
+        }
+
+        .vp-stat {
+            text-align: center;
+        }
+
+        .vp-stat-num {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #fff;
+            display: block;
+        }
+
+        .vp-stat-label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.55);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Main */
+        .vp-main {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 3.5rem 6%;
+        }
+
+        .vp-section-label {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .vp-section-label h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #111;
+            white-space: nowrap;
+        }
+
+        .vp-section-divider {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, #e0e0e0, transparent);
+        }
+
+        /* Grid */
+        .vp-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 2rem;
+        }
+
+        /* Card */
+        .vp-card {
+            position: relative;
+            border-radius: 18px;
+            overflow: hidden;
+            height: 360px;
+            text-decoration: none;
+            display: block;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.10);
+            background: #111;
+            transition: transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s;
+        }
+
+        .vp-card:hover {
+            transform: translateY(-6px) scale(1.01);
+            box-shadow: 0 16px 45px rgba(0, 0, 0, 0.22);
+        }
+
+        /* Thumbnail */
+        .vp-thumb {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .vp-card:hover .vp-thumb {
+            transform: scale(1.06);
+        }
+
+        .vp-thumb-placeholder {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #0f0c29, #302b63);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .vp-thumb-placeholder svg {
+            opacity: 0.2;
+        }
+
+        /* Overlay */
+        .vp-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.35) 50%, rgba(0, 0, 0, 0.1) 100%);
+            z-index: 1;
+        }
+
+        /* Play button */
+        .vp-play {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            z-index: 3;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            backdrop-filter: blur(6px);
+            opacity: 0;
+            transition: opacity 0.25s, transform 0.3s;
+        }
+
+        .vp-card:hover .vp-play {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        /* Badge */
+        .vp-badge {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            z-index: 3;
+            background: #ff4e4e;
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .vp-badge-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #fff;
+            animation: pulse-dot 1.5s infinite;
+        }
+
+        @keyframes pulse-dot {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        /* Content */
+        .vp-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem;
+            z-index: 2;
+        }
+
+        .vp-card-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.4;
+            margin-bottom: 0.5rem;
+        }
+
+        .vp-watch-label {
+            font-size: 0.8rem;
+            color: #ff9a9a;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        /* Empty */
+        .vp-empty {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 3rem;
+            color: #999;
+        }
+
+        @media (max-width: 768px) {
+            .vp-hero {
+                padding: 4.5rem 5% 3rem;
+            }
+
+            .vp-hero-stats {
+                gap: 2rem;
+            }
+
+            .vp-main {
+                padding: 2.5rem 5%;
+            }
+
+            .vp-grid {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+                gap: 1.5rem;
+            }
+
+            .vp-card {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="logo">
+            <img class="logo-image" src="assest/Kj-logo.png" alt="Kid Scholars International Playschool logo">
+            <span class="logo-text">Kid Scholars International Playschool<br><small
+                    style="font-weight:400;font-size:0.75em;opacity:0.75;">A Unit of AJ Academy</small></span>
+        </div>
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+            <span></span><span></span><span></span>
+        </button>
+        <ul id="nav-menu">
+            <li><a href="index.html#home">Home</a></li>
+            <li><a href="index.html#about">About</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="videos.html">Videos</a></li>
+            <li><a href="events.html">Events</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero -->
+    <header class="vp-hero">
+        <span class="vp-hero-eyebrow">▶ Video Gallery</span>
+        <h1>Our Moments,<br>Captured on Video</h1>
+        <p>Watch highlights from our events, activities, and life at Kid Scholars.</p>
+
+    </header>
+
+    <main class="vp-main">
+        <div class="vp-section-label">
+            <h2>All Videos</h2>
+            <div class="vp-section-divider"></div>
+        </div>
+        <div class="vp-grid" id="videosContainer">
+            <p class="vp-empty">Loading videos...</p>
+        </div>
+    </main>
+
+    <section class="footer">
+        <div class="box-container">
+            <div class="box">
+                <h3>Contact Us</h3>
+                <p><strong>Branch 1:</strong><br>4C, CCR Garden, Sri Ragavendra Apartment<br>MGR Road, Vignarajapuram,
+                    Medavakkam<br>Chennai - 600100</p>
+                <p><strong>Branch 2:</strong><br>8A, Beraka Nagar, Durga Colony<br>Sembakkam, Chennai - 600073</p>
+            </div>
+            <div class="box">
+                <h3>Quick Links</h3>
+                <a href="index.html#home">Home</a>
+                <a href="index.html#about">About</a>
+                <a href="gallery.html">Gallery</a>
+                <a href="videos.html">Videos</a>
+                <a href="events.html">Events</a>
+                <a href="index.html#contact">Contact</a>
+            </div>
+            <div class="box">
+                <h3>Follow Us</h3>
+                <a href="https://www.facebook.com/kidscholarsschool" target="_blank" rel="noopener"><img
+                        src="assests/fb-logo.png" height="25" alt="Facebook"></a>
+                <a href="https://www.instagram.com/kidscholarsschool" target="_blank" rel="noopener"><img
+                        src="assests/insta-logo.png" height="25" alt="Instagram"></a>
+                <a href="https://www.youtube.com/@kidscholarsschool" target="_blank" rel="noopener"><img
+                        src="assests/youtube-logo.png" height="25" alt="YouTube"></a>
+            </div>
+            <div class="box">
+                <h3>Powered By</h3>
+                <a class="powered-by" href="https://www.digitekera.com/" target="_blank" rel="noopener">
+                    <img src="assest/Powered by DigiTekEra.png" alt="Powered by DigiTekEra">
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Powered by DigiTekEra Credit Strip -->
+    <div class="footer-credit">
+        <a href="https://www.digitekera.com/" target="_blank" rel="noopener">
+            <img src="assest/Powered by DigiTekEra.png" alt="Powered by DigiTekEra">
+        </a>
+    </div>
+
+    <a class="whatsapp-float" href="https://wa.me/917200825692" target="_blank" rel="noopener">
+        <img src="assest/whatsapp.png" alt="WhatsApp">
+    </a>
+
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script>
+        const SUPABASE_URL = "https://yuvnljxzhawqymfetkjr.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl1dm5sanh6aGF3cXltZmV0a2pyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5Njg2MTYsImV4cCI6MjA4ODU0NDYxNn0.6tzp1wc7x8Dna4x15oaJy7MuFmLtPLsbadUM2qL1WKg";
+        const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const container = document.getElementById("videosContainer");
+
+        async function loadVideos() {
+            const { data, error } = await sb
+                .from("videos")
+                .select("*")
+                .order("created_at", { ascending: false });
+
+            if (error) {
+                container.innerHTML = '<p class="vp-empty">Error loading videos. Please try again later.</p>';
+                return;
+            }
+
+            if (!data || data.length === 0) {
+                container.innerHTML = '<p class="vp-empty">No videos available yet. Check back soon!</p>';
+                return;
+            }
+
+            
+            container.innerHTML = "";
+
+            data.forEach((video) => {
+                const thumbLayer = video.thumbnail_url
+                    ? `<img src="${video.thumbnail_url}" class="vp-thumb" alt="Video thumbnail">`
+                    : `<div class="vp-thumb-placeholder"><svg width="80" height="80" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg></div>`;
+
+                const card = document.createElement("a");
+                card.href = video.youtube_link;
+                card.target = "_blank";
+                card.rel = "noopener";
+                card.className = "vp-card";
+
+                card.innerHTML = `
+                    ${thumbLayer}
+                    <div class="vp-overlay"></div>
+                    <div class="vp-badge">
+                        <span class="vp-badge-dot"></span> YouTube
+                    </div>
+                    <div class="vp-play">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                    </div>
+                    <div class="vp-content">
+                        <h3 class="vp-card-title">${video.description || 'Watch Video'}</h3>
+                        <div class="vp-watch-label">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                            Watch on YouTube
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        loadVideos();
+    </script>
+</body>
+
+</html>

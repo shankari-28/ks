@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | Kid Scholars</title>
+    <link rel="icon" type="image/png" href="assests/Kj-logo.png">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-wrap {
+            max-width: 1000px;
+            margin: 2.5rem auto 4rem;
+            padding: 2rem 2.5rem;
+            border-radius: 18px;
+            background: #fff;
+            box-shadow: 0 14px 32px rgba(0, 0, 0, 0.16);
+        }
+
+        .admin-wrap h1 {
+            font-size: 1.7rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .admin-form-row {
+            margin-bottom: 1rem;
+        }
+
+        .admin-form-row label {
+            display: block;
+            margin-bottom: 0.35rem;
+            font-weight: 600;
+        }
+
+        .admin-form-row input,
+        .admin-form-row textarea {
+            width: 100%;
+            padding: 0.8rem 0.9rem;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            font-size: 0.95rem;
+        }
+
+        .admin-form-row input[type="file"] {
+            padding: 0.4rem 0;
+        }
+
+        .admin-actions {
+            margin-top: 1.2rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .admin-status {
+            font-size: 0.9rem;
+            color: #333;
+        }
+
+        .events-admin-list {
+            margin-top: 2rem;
+            border-top: 1px solid #eee;
+            padding-top: 1.5rem;
+        }
+
+        .event-admin-card {
+            border-radius: 12px;
+            padding: 1rem 1.2rem 1.2rem;
+            background: #fafafa;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            margin-bottom: 1rem;
+        }
+
+        .event-admin-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .event-admin-header input,
+        .event-admin-header textarea {
+            padding: 0.5rem 0.6rem;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            width: 100%;
+        }
+
+        .event-admin-actions button {
+            margin-left: 0.5rem;
+        }
+
+        .event-admin-images {
+            margin-top: 0.5rem;
+        }
+
+        .event-admin-images-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .event-admin-image {
+            position: relative;
+        }
+
+        .event-admin-image img {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .event-admin-image button {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            border: none;
+            background: #e74c3c;
+            color: #fff;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .event-admin-add-photos {
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            .admin-wrap {
+                margin: 2rem 1rem 3rem;
+                padding: 1.5rem 1.25rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="logo">
+            <img class="logo-image" src="assest/Kj-logo.png" alt="Kid Scholars International Playschool logo">
+            <span class="logo-text">Kid Scholars International Playschool<br><small
+                    style="font-weight:400;font-size:0.75em;opacity:0.75;">A Unit of AJ Academy</small></span>
+        </div>
+
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <ul id="nav-menu">
+            <li><a href="index.html#home">Home</a></li>
+            <li><a href="index.html#about">About</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="videos.html">Videos</a></li>
+            <li><a href="events.html">Events</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <main class="admin-wrap">
+        <h1>Admin Control Panel</h1>
+
+        <!-- Auth section -->
+        <section id="auth-section" class="admin-auth">
+            <h2 style="font-size:1.1rem;margin-bottom:0.8rem;">Admin Login</h2>
+            <form id="login-form">
+                <div class="admin-form-row">
+                    <label for="adminEmail">Email</label>
+                    <input type="email" id="adminEmail" required>
+                </div>
+                <div class="admin-form-row">
+                    <label for="adminPassword">Password</label>
+                    <input type="password" id="adminPassword" required>
+                </div>
+                <div class="admin-actions">
+                    <button type="submit" id="loginBtn" class="cta-button">Log In</button>
+                    <div id="authStatus" class="admin-status"></div>
+                </div>
+            </form>
+        </section>
+
+        <!-- Main Admin UI (hidden until logged in) -->
+        <div id="adminArea" style="display:none;">
+            <div class="admin-tabs">
+                <button class="admin-tab active" data-tab="tab-gallery">Manage Gallery</button>
+                <button class="admin-tab" data-tab="tab-videos">Manage Videos</button>
+                <button class="admin-tab" data-tab="tab-events">Manage Events</button>
+                <button type="button" id="logoutBtn" class="cta-button"
+                    style="background:#fff;border-color:#333;margin-left:auto;padding:0.5rem 1rem;">Log Out</button>
+            </div>
+            <div id="mainAuthStatus" class="admin-status" style="margin-bottom: 1rem;"></div>
+
+            <!-- TAB 1: GALLERY -->
+            <div id="tab-gallery" class="admin-tab-content active">
+                <form id="gallery-form">
+                    <div class="admin-form-row">
+                        <label for="galleryName">Gallery Title</label>
+                        <input type="text" id="galleryName" required>
+                    </div>
+                    <div class="admin-form-row">
+                        <label for="galleryDate">Date</label>
+                        <input type="date" id="galleryDate" required>
+                    </div>
+                    <div class="admin-form-row">
+                        <label for="galleryDescription">Description (optional)</label>
+                        <textarea id="galleryDescription" rows="2" placeholder="Brief description"></textarea>
+                    </div>
+                    <div class="admin-form-row">
+                        <label for="galleryPhoto">Gallery Photos</label>
+                        <input type="file" id="galleryPhoto" accept="image/*" multiple required>
+                    </div>
+                    <div class="admin-actions">
+                        <button type="submit" id="gallerySubmitBtn" class="cta-button">Upload to Gallery</button>
+                        <div id="galleryStatus" class="admin-status"></div>
+                    </div>
+                </form>
+
+                <section class="events-admin-list">
+                    <h2 style="font-size:1.2rem;margin-bottom:0.8rem;">Existing Gallery Items</h2>
+                    <div id="galleryAdminList"></div>
+                </section>
+            </div>
+
+            <!-- TAB 2: VIDEOS -->
+            <div id="tab-videos" class="admin-tab-content">
+                <form id="video-form">
+                    <div class="admin-form-row">
+                        <label for="videoLink">YouTube Link</label>
+                        <input type="url" id="videoLink" placeholder="https://www.youtube.com/watch?v=..." required>
+                    </div>
+                    <div class="admin-form-row">
+                        <label for="videoDescription">Description (optional)</label>
+                        <textarea id="videoDescription" rows="2"
+                            placeholder="Brief description of the video"></textarea>
+                    </div>
+                    <div class="admin-actions">
+                        <button type="submit" id="videoSubmitBtn" class="cta-button">Add Video</button>
+                        <div id="videoStatus" class="admin-status"></div>
+                    </div>
+                </form>
+
+                <section class="events-admin-list">
+                    <h2 style="font-size:1.2rem;margin-bottom:0.8rem;">Existing Videos</h2>
+                    <div id="videoAdminList"></div>
+                </section>
+            </div>
+
+            <!-- TAB 3: EVENTS -->
+            <div id="tab-events" class="admin-tab-content">
+                <form id="event-form">
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <div class="admin-form-row" style="flex: 1; min-width: 250px;">
+                            <label for="eventTitle">Event Title</label>
+                            <input type="text" id="eventTitle" required>
+                        </div>
+                        <div class="admin-form-row" style="flex: 1; min-width: 250px;">
+                            <label for="eventConfDate">Event Date</label>
+                            <input type="date" id="eventConfDate" required>
+                        </div>
+                    </div>
+                    <div class="admin-form-row">
+                        <label for="eventLocation">Location</label>
+                        <input type="text" id="eventLocation" placeholder="e.g. Bandra West, Mumbai" required>
+                    </div>
+                    <div class="admin-form-row">
+                        <label for="eventDesc">Event Description</label>
+                        <textarea id="eventDesc" rows="3" required></textarea>
+                    </div>
+
+                    <div class="admin-form-row">
+                        <label for="eventConfPhoto">Cover Photo (Optional)</label>
+                        <input type="file" id="eventConfPhoto" accept="image/*">
+                    </div>
+                    <div class="admin-actions">
+                        <button type="submit" id="eventSubmitBtn" class="cta-button">Create Event</button>
+                        <div id="eventStatus" class="admin-status"></div>
+                    </div>
+                </form>
+
+                <section class="events-admin-list">
+                    <h2 style="font-size:1.2rem;margin-bottom:0.8rem;">Existing Scheduled Events</h2>
+                    <div id="eventConfAdminList"></div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <!-- Powered by DigiTekEra Credit Strip -->
+    <div class="footer-credit">
+        <a href="https://www.digitekera.com/" target="_blank" rel="noopener">
+            <img src="assest/Powered by DigiTekEra.png" alt="Powered by DigiTekEra">
+        </a>
+    </div>
+
+    <a class="whatsapp-float" href="https://wa.me/917200825692" target="_blank" rel="noopener">
+        <img src="assest/whatsapp.png" alt="WhatsApp">
+    </a>
+
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script>
+        const SUPABASE_URL = "https://yuvnljxzhawqymfetkjr.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl1dm5sanh6aGF3cXltZmV0a2pyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5Njg2MTYsImV4cCI6MjA4ODU0NDYxNn0.6tzp1wc7x8Dna4x15oaJy7MuFmLtPLsbadUM2qL1WKg";
+        const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // UI Element References
+        const authSection = document.getElementById("auth-section");
+        const adminArea = document.getElementById("adminArea");
+        const loginForm = document.getElementById("login-form");
+        const loginBtn = document.getElementById("loginBtn");
+        const authStatusEl = document.getElementById("authStatus");
+        const mainAuthStatus = document.getElementById("mainAuthStatus");
+        const logoutBtn = document.getElementById("logoutBtn");
+
+        // Tab Logic
+        const tabs = document.querySelectorAll('.admin-tab');
+        const tabContents = document.querySelectorAll('.admin-tab-content');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tabContents.forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab).classList.add('active');
+            });
+        });
+
+        function urlToPath(url) {
+            const marker = "/storage/v1/object/public/event-photos/";
+            const idx = url.indexOf(marker);
+            if (idx === -1) return null;
+            return url.slice(idx + marker.length);
+        }
+
+        async function refreshAuthUI() {
+            const { data, error } = await sb.auth.getUser();
+            if (error || !data.user) {
+                authSection.style.display = "block";
+                adminArea.style.display = "none";
+                authStatusEl.textContent = error ? "Please log in." : "";
+            } else {
+                authSection.style.display = "none";
+                adminArea.style.display = "block";
+                mainAuthStatus.textContent = "Logged in as: " + (data.user.email || "admin");
+                loadGallery();
+                loadVideos();
+                loadScheduledEvents();
+            }
+        }
+
+        loginForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            authStatusEl.textContent = "";
+            loginBtn.disabled = true;
+            loginBtn.textContent = "Logging in...";
+            const email = document.getElementById("adminEmail").value.trim();
+            const password = document.getElementById("adminPassword").value;
+
+            const { error } = await sb.auth.signInWithPassword({ email, password });
+            if (error) {
+                authStatusEl.textContent = "Login failed: " + (error.message || "Unknown error");
+            }
+            await refreshAuthUI();
+            loginBtn.disabled = false;
+            loginBtn.textContent = "Log In";
+        });
+
+        logoutBtn.addEventListener("click", async () => {
+            await sb.auth.signOut();
+            mainAuthStatus.textContent = "";
+            await refreshAuthUI();
+        });
+
+        /* ======================== GALLERY LOGIC (`events` table) ======================== */
+        const galleryForm = document.getElementById("gallery-form");
+        const galleryList = document.getElementById("galleryAdminList");
+
+        async function loadGallery() {
+            const { data, error } = await sb.from("events").select("*").order("event_date", { ascending: false });
+            if (error) { galleryList.textContent = "Error loading gallery."; return; }
+            if (!data || data.length === 0) { galleryList.textContent = "No items."; return; }
+
+            galleryList.innerHTML = "";
+            data.forEach((event) => {
+                const card = document.createElement("div");
+                card.className = "event-admin-card";
+                card.dataset.id = event.id;
+
+                let images = Array.isArray(event.images) && event.images.length ? event.images : (event.image_url ? [event.image_url] : []);
+                let imagesHtml = images.map(url => `
+                    <div class="event-admin-image" data-url="${url}">
+                        <img src="${url}" alt="photo">
+                        <button class="del-gal-img-btn" type="button" data-url="${url}">×</button>
+                    </div>
+                `).join('');
+
+                card.innerHTML = `
+                    <div class="view-mode" style="display:flex; justify-content:space-between; align-items:center;">
+                        <div><strong>${event.event_name}</strong> - ${event.event_date}</div>
+                        <div>
+                            <button class="cta-button edit-gallery-btn" style="background:#fff; border-color:#3498db; margin-right:0.5rem; padding:0.4rem 0.8rem;">Edit</button>
+                            <button class="cta-button del-gallery-btn" style="background:#fff; border-color:#e74c3c; padding:0.4rem 0.8rem;">Delete</button>
+                        </div>
+                    </div>
+                    <div class="edit-mode" style="display:none; margin-top: 1rem; border-top: 1px solid #eee; padding-top: 1rem;">
+                        <input type="text" class="edit-gal-name" value="${event.event_name || ''}" style="margin-bottom:0.5rem; width:100%; padding:0.5rem; border-radius:8px; border:1px solid #ccc;">
+                        <input type="date" class="edit-gal-date" value="${event.event_date || ''}" style="margin-bottom:0.5rem; width:100%; padding:0.5rem; border-radius:8px; border:1px solid #ccc;">
+                        
+                        <div class="edit-gal-images" style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1rem;">
+                            ${imagesHtml}
+                        </div>
+                        <div style="margin-bottom: 0.5rem;">
+                            <label style="font-size:0.85rem;">Add more photos:</label>
+                            <input type="file" class="add-gal-photos" accept="image/*" multiple style="width:100%; padding:0.5rem;">
+                        </div>
+
+                        <button class="cta-button save-gallery-btn" style="background:#2ecc71; border-color:#27ae60; padding:0.4rem 0.8rem;">Save Changes</button>
+                        <button class="cta-button cancel-gallery-btn" style="background:#fff; border-color:#95a5a6; margin-left:0.5rem; padding:0.4rem 0.8rem;">Cancel</button>
+                    </div>
+                `;
+                galleryList.appendChild(card);
+            });
+
+            // Attach listeners for Edit, Cancel, Save, Delete Image, Delete Event
+            // Delete Event
+            document.querySelectorAll('.del-gallery-btn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    if (!confirm("Delete this gallery item?")) return;
+                    const id = e.target.closest('.event-admin-card').dataset.id;
+                    const evt = data.find(x => x.id == id);
+                    if (evt) {
+                        let imgs = Array.isArray(evt.images) && evt.images.length ? evt.images : (evt.image_url ? [evt.image_url] : []);
+                        const paths = imgs.map(urlToPath).filter(Boolean);
+                        if (paths.length) await sb.storage.from("event-photos").remove(paths);
+                    }
+                    await sb.from("events").delete().eq("id", id);
+                    loadGallery();
+                });
+            });
+
+            // Edit toggles
+            document.querySelectorAll('.edit-gallery-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const card = e.target.closest('.event-admin-card');
+                    card.querySelector('.view-mode').style.display = 'none';
+                    card.querySelector('.edit-mode').style.display = 'block';
+                });
+            });
+            document.querySelectorAll('.cancel-gallery-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const card = e.target.closest('.event-admin-card');
+                    card.querySelector('.edit-mode').style.display = 'none';
+                    card.querySelector('.view-mode').style.display = 'flex';
+                });
+            });
+
+            // Save Gallery Changes
+            document.querySelectorAll('.save-gallery-btn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    const card = e.target.closest('.event-admin-card');
+                    const id = card.dataset.id;
+                    const evt = data.find(x => x.id == id);
+                    const newName = card.querySelector('.edit-gal-name').value.trim();
+                    const newDate = card.querySelector('.edit-gal-date').value;
+                    const files = Array.from(card.querySelector('.add-gal-photos').files || []);
+
+                    btn.disabled = true;
+                    btn.textContent = "Saving...";
+
+                    let currentImages = Array.isArray(evt.images) && evt.images.length ? evt.images : (evt.image_url ? [evt.image_url] : []);
+
+                    try {
+                        const newImageUrls = [];
+                        for (const file of files) {
+                            const ext = file.name.split(".").pop();
+                            const fileName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9]/g, '')}.${ext}`;
+                            const { error: uploadError } = await sb.storage.from("event-photos").upload(fileName, file);
+                            if (uploadError) throw uploadError;
+                            const { data: publicData } = sb.storage.from("event-photos").getPublicUrl(fileName);
+                            newImageUrls.push(publicData.publicUrl);
+                        }
+
+                        const finalImages = [...currentImages, ...newImageUrls];
+
+                        await sb.from("events").update({
+                            event_name: newName,
+                            event_date: newDate,
+                            images: finalImages,
+                            image_url: finalImages.length > 0 ? finalImages[0] : null
+                        }).eq("id", id);
+
+                        loadGallery();
+                    } catch (err) {
+                        alert("Error saving: " + err.message);
+                        btn.disabled = false;
+                        btn.textContent = "Save Changes";
+                    }
+                });
+            });
+
+            // Delete specific image from gallery
+            document.querySelectorAll('.del-gal-img-btn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    if (!confirm("Delete this photo?")) return;
+                    const card = e.target.closest('.event-admin-card');
+                    const id = card.dataset.id;
+                    const url = e.target.dataset.url;
+                    const evt = data.find(x => x.id == id);
+
+                    let images = Array.isArray(evt.images) && evt.images.length ? evt.images : (evt.image_url ? [evt.image_url] : []);
+                    const newImages = images.filter(imgUrl => imgUrl !== url);
+
+                    try {
+                        const path = urlToPath(url);
+                        if (path) {
+                            await sb.storage.from("event-photos").remove([path]);
+                        }
+
+                        await sb.from("events").update({
+                            images: newImages,
+                            image_url: newImages.length > 0 ? newImages[0] : null
+                        }).eq("id", id);
+
+                        evt.images = newImages; // update local ref so it doesn't break if saved again
+                        e.target.closest('.event-admin-image').remove();
+                    } catch (err) {
+                        alert("Error deleting image: " + err.message);
+                    }
+                });
+            });
+        }
+
+        galleryForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById("gallerySubmitBtn");
+            const st = document.getElementById("galleryStatus");
+            btn.disabled = true; st.textContent = "Uploading...";
+
+            const name = document.getElementById("galleryName").value.trim();
+            const date = document.getElementById("galleryDate").value;
+            const desc = document.getElementById("galleryDescription").value.trim();
+            const files = Array.from(document.getElementById("galleryPhoto").files || []);
+
+            try {
+                const imageUrls = [];
+                for (const file of files) {
+                    const ext = file.name.split(".").pop();
+                    const fileName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9]/g, '')}.${ext}`;
+                    const { error: uploadError } = await sb.storage.from("event-photos").upload(fileName, file);
+                    if (uploadError) throw uploadError;
+                    const { data: publicData } = sb.storage.from("event-photos").getPublicUrl(fileName);
+                    imageUrls.push(publicData.publicUrl);
+                }
+
+                await sb.from("events").insert([{
+                    event_name: name,
+                    event_date: date,
+                    image_url: imageUrls[0] || null,
+                    images: imageUrls,
+                    description: desc || null
+                }]);
+
+                st.textContent = "Uploaded successfully!";
+                galleryForm.reset();
+                loadGallery();
+            } catch (err) {
+                console.error(err);
+                st.textContent = "Error: " + err.message;
+            } finally {
+                btn.disabled = false;
+            }
+        });
+
+        /* ======================== VIDEOS LOGIC (`videos` table) ======================== */
+        const videoForm = document.getElementById("video-form");
+        const videoList = document.getElementById("videoAdminList");
+
+        async function loadVideos() {
+            const { data, error } = await sb.from("videos").select("*").order("created_at", { ascending: false });
+            if (error) { videoList.innerHTML = "<p style='color:red;'>Make sure you've created the `videos` table in Supabase!</p>"; return; }
+            if (!data || data.length === 0) { videoList.textContent = "No videos."; return; }
+
+            videoList.innerHTML = "";
+            data.forEach((video) => {
+                const card = document.createElement("div");
+                card.className = "event-admin-card";
+                const thumbHtml = video.thumbnail_url
+                    ? `<img src="${video.thumbnail_url}" style="width:100%; height:140px; object-fit:cover; border-radius:8px; margin-bottom:0.75rem; display:block;">`
+                    : `<div style="width:100%; height:100px; background:#eee; border-radius:8px; margin-bottom:0.75rem; display:flex; align-items:center; justify-content:center; color:#aaa; font-size:0.85rem;">No thumbnail</div>`;
+                card.innerHTML = `
+                    ${thumbHtml}
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+                        <div>
+                            <strong style="font-size:0.95rem;">${video.description || 'No description'}</strong><br>
+                            <a href="${video.youtube_link}" target="_blank" style="font-size:0.82rem; color:#3498db;">View on YouTube ↗</a>
+                        </div>
+                        <button class="cta-button del-video-btn" data-id="${video.id}" style="background:#fff; border-color:#e74c3c; padding:0.4rem 0.8rem;">Delete</button>
+                    </div>
+                `;
+                videoList.appendChild(card);
+            });
+
+            document.querySelectorAll('.del-video-btn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    if (!confirm("Delete this video?")) return;
+                    await sb.from("videos").delete().eq("id", e.target.dataset.id);
+                    loadVideos();
+                });
+            });
+        }
+
+        videoForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById("videoSubmitBtn");
+            const st = document.getElementById("videoStatus");
+            btn.disabled = true; st.textContent = "Adding...";
+
+            const link = document.getElementById("videoLink").value.trim();
+            const desc = document.getElementById("videoDescription").value.trim();
+
+            try {
+                let thumb = null;
+                try {
+                    const urlObj = new URL(link);
+                    let videoId = null;
+                    if (urlObj.hostname.includes('youtube.com')) videoId = urlObj.searchParams.get('v');
+                    else if (urlObj.hostname.includes('youtu.be')) videoId = urlObj.pathname.slice(1);
+                    if (videoId) thumb = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+                } catch (e) { }
+
+                await sb.from("videos").insert([{
+                    youtube_link: link,
+                    description: desc || null,
+                    thumbnail_url: thumb
+                }]);
+                st.textContent = "Added successfully!";
+                videoForm.reset();
+                loadVideos();
+            } catch (err) {
+                console.error(err);
+                st.textContent = "Error: " + err.message;
+            } finally {
+                btn.disabled = false;
+            }
+        });
+
+        /* ======================== SCHEDULED EVENTS LOGIC (`scheduled_events` table) ======================== */
+        const evtForm = document.getElementById("event-form");
+        const evtList = document.getElementById("eventConfAdminList");
+
+        async function loadScheduledEvents() {
+            const { data, error } = await sb.from("scheduled_events").select("*").order("event_date", { ascending: false });
+            if (error) { evtList.innerHTML = "<p style='color:red;'>Make sure you've created the `scheduled_events` table in Supabase!</p>"; return; }
+            if (!data || data.length === 0) { evtList.textContent = "No items."; return; }
+
+            evtList.innerHTML = "";
+            data.forEach((evt) => {
+                const card = document.createElement("div");
+                card.className = "event-admin-card";
+                card.dataset.id = evt.id;
+                card.innerHTML = `
+                    <div class="view-mode" style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div>
+                            <strong>${evt.title}</strong><br>
+                            <small>${evt.event_date} - ${evt.location}</small>
+                        </div>
+                        <div>
+                            <button class="cta-button edit-evt-btn" style="background:#fff; border-color:#3498db; margin-right:0.5rem; padding:0.4rem 0.8rem;">Edit</button>
+                            <button class="cta-button del-evt-btn" style="background:#fff; border-color:#e74c3c; padding:0.4rem 0.8rem;">Delete</button>
+                        </div>
+                    </div>
+                    <div class="edit-mode" style="display:none; margin-top: 1rem; border-top: 1px solid #eee; padding-top: 1rem;">
+                        <label>Title:</label>
+                        <input type="text" class="edit-evt-title" value="${evt.title}" style="margin-bottom:0.5rem; width:100%; padding:0.5rem; border-radius:8px; border:1px solid #ccc;">
+                        <label>Date:</label>
+                        <input type="date" class="edit-evt-date" value="${evt.event_date}" style="margin-bottom:0.5rem; width:100%; padding:0.5rem; border-radius:8px; border:1px solid #ccc;">
+                        <label>Location:</label>
+                        <input type="text" class="edit-evt-loc" value="${evt.location || ''}" style="margin-bottom:0.5rem; width:100%; padding:0.5rem; border-radius:8px; border:1px solid #ccc;">
+                        
+                        <label>Description:</label>
+                        <textarea class="edit-evt-desc" rows="3" style="margin-bottom:0.5rem; width:100%; padding:0.5rem; border-radius:8px; border:1px solid #ccc;">${evt.description || ''}</textarea>
+                        
+
+                        
+                        <div style="margin-bottom:0.8rem;">
+                            <label>Cover Photo (leave blank to keep current):</label><br>
+                            ${evt.image_url ? `<img src="${evt.image_url}" style="width:80px;height:80px;object-fit:cover;border-radius:8px;margin-bottom:0.5rem;">` : ''}
+                            <input type="file" class="edit-evt-photo" accept="image/*" style="width:100%; padding:0.5rem;">
+                        </div>
+
+                        <button class="cta-button save-evt-btn" style="background:#2ecc71; border-color:#27ae60; padding:0.4rem 0.8rem;">Save Changes</button>
+                        <button class="cta-button cancel-evt-btn" style="background:#fff; border-color:#95a5a6; margin-left:0.5rem; padding:0.4rem 0.8rem;">Cancel</button>
+                    </div>
+                `;
+                evtList.appendChild(card);
+            });
+
+            // Delete Event
+            document.querySelectorAll('.del-evt-btn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    if (!confirm("Delete this event?")) return;
+                    const id = e.target.closest('.event-admin-card').dataset.id;
+                    const ev = data.find(x => x.id == id);
+                    if (ev && ev.image_url) {
+                        const path = urlToPath(ev.image_url);
+                        if (path) await sb.storage.from("event-photos").remove([path]);
+                    }
+                    await sb.from("scheduled_events").delete().eq("id", id);
+                    loadScheduledEvents();
+                });
+            });
+
+            // Edit toggles
+            document.querySelectorAll('.edit-evt-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const card = e.target.closest('.event-admin-card');
+                    card.querySelector('.view-mode').style.display = 'none';
+                    card.querySelector('.edit-mode').style.display = 'block';
+                });
+            });
+            document.querySelectorAll('.cancel-evt-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const card = e.target.closest('.event-admin-card');
+                    card.querySelector('.edit-mode').style.display = 'none';
+                    card.querySelector('.view-mode').style.display = 'flex';
+                });
+            });
+
+            // Save changes
+            document.querySelectorAll('.save-evt-btn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    const card = e.target.closest('.event-admin-card');
+                    const id = card.dataset.id;
+                    const ev = data.find(x => x.id == id);
+
+                    const title = card.querySelector('.edit-evt-title').value.trim();
+                    const date = card.querySelector('.edit-evt-date').value;
+                    const loc = card.querySelector('.edit-evt-loc').value.trim();
+                    const desc = card.querySelector('.edit-evt-desc').value.trim();
+                    const files = Array.from(card.querySelector('.edit-evt-photo').files || []);
+
+                    btn.disabled = true;
+                    btn.textContent = "Saving...";
+
+                    try {
+                        let imageUrl = ev.image_url;
+                        if (files.length > 0) {
+                            const file = files[0];
+                            const ext = file.name.split(".").pop();
+                            const fileName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9]/g, '')}.${ext}`;
+                            const { error: uploadError } = await sb.storage.from("event-photos").upload(fileName, file);
+                            if (uploadError) throw uploadError;
+                            const { data: publicData } = sb.storage.from("event-photos").getPublicUrl(fileName);
+
+                            // remove old image from storage if it exists
+                            if (ev.image_url) {
+                                const oldPath = urlToPath(ev.image_url);
+                                if (oldPath) await sb.storage.from("event-photos").remove([oldPath]);
+                            }
+
+                            imageUrl = publicData.publicUrl;
+                        }
+
+                        await sb.from("scheduled_events").update({
+                            title: title,
+                            event_date: date,
+                            location: loc,
+                            description: desc,
+                            image_url: imageUrl
+                        }).eq("id", id);
+
+                        loadScheduledEvents();
+                    } catch (err) {
+                        alert("Error saving: " + err.message);
+                        btn.disabled = false;
+                        btn.textContent = "Save Changes";
+                    }
+                });
+            });
+        }
+
+        evtForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById("eventSubmitBtn");
+            const st = document.getElementById("eventStatus");
+            btn.disabled = true; st.textContent = "Creating...";
+
+            const title = document.getElementById("eventTitle").value.trim();
+            const date = document.getElementById("eventConfDate").value;
+            const loc = document.getElementById("eventLocation").value.trim();
+            const desc = document.getElementById("eventDesc").value.trim();
+            const curr = document.getElementById("eventCurriculum").value.trim();
+            const exp = document.getElementById("eventExpert").value.trim();
+            const gear = document.getElementById("eventGear").value.trim();
+
+            const files = Array.from(document.getElementById("eventConfPhoto").files || []);
+            let imageUrl = null;
+
+            try {
+                if (files.length > 0) {
+                    const file = files[0];
+                    const ext = file.name.split(".").pop();
+                    const fileName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9]/g, '')}.${ext}`;
+                    const { error: uploadError } = await sb.storage.from("event-photos").upload(fileName, file);
+                    if (uploadError) throw uploadError;
+                    const { data: publicData } = sb.storage.from("event-photos").getPublicUrl(fileName);
+                    imageUrl = publicData.publicUrl;
+                }
+
+                await sb.from("scheduled_events").insert([{
+                    title: title,
+                    event_date: date,
+                    location: loc,
+                    description: desc,
+                    curriculum: curr || null,
+                    expert_creator: exp || null,
+                    gear_requirements: gear || null,
+                    image_url: imageUrl
+                }]);
+
+                st.textContent = "Event created successfully!";
+                evtForm.reset();
+                loadScheduledEvents();
+            } catch (err) {
+                console.error(err);
+                st.textContent = "Error: " + err.message;
+            } finally {
+                btn.disabled = false;
+            }
+        });
+
+        // Start
+        refreshAuthUI();
+    </script>
+</body>
+
+</html>
