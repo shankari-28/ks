@@ -122,6 +122,9 @@ nav a:hover {
 }
 
 .cta-button {
+    display: inline-block;
+    text-decoration: none;
+    color: #333;
     padding: 0.85rem 2rem;
     border: 3px solid #333;
     background: #ffd700;
@@ -129,6 +132,7 @@ nav a:hover {
     font-size: 1rem;
     cursor: pointer;
     border-radius: 4px;
+    transition: all 0.3s ease;
 }
 
 .cta-button:hover {
@@ -143,10 +147,44 @@ nav a:hover {
 }
 
 .hero-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+        width: 100%;
+        max-width: 520px;
+        height: auto;
+        object-fit: cover;
+        border-radius: 50px;
+        margin-left: 0;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+        transition: width 0.3s, max-width 0.3s, margin 0.3s;
 }
+
+@media (min-width: 900px) {
+    .hero-image img {
+        width: 150%;
+        max-width: none;
+        height: 100%;
+        margin-left: -120px;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-image img {
+        width: 100%;
+        max-width: 320px;
+        margin-left: 0;
+        height: auto;
+    }
+}
+
+@media (max-width: 420px) {
+    .hero-image img {
+        width: 180%;
+        max-width: 250px;
+        margin-left: -40px;
+        height: 150px;
+        border-radius: 18px;
+    }
+}
+
 
 /* ========== ABOUT ========== */
 .about {
@@ -182,8 +220,10 @@ nav a:hover {
     width: 100%;
     max-width: 480px;
     height: auto;
-    object-fit: contain;
+    object-fit: cover;
     display: block;
+    border-radius: 18px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
 .about-text {
@@ -494,10 +534,10 @@ nav a:hover {
 
 /* Powered-by bottom strip */
 .footer-credit {
-    background: #e07a3a;
+    background: #ff9a56;
     text-align: center;
-    padding: 0.9rem 1rem;
-    border-top: 1px solid rgba(255,255,255,0.18);
+    padding: 0.5rem 1rem;
+    border-top: none;
 }
 
 .footer-credit a {
@@ -509,8 +549,15 @@ nav a:hover {
 }
 
 .footer-credit img {
-    height: 28px;
+    height: 20px;
     display: block;
+}
+
+.footer-credit span {
+    font-size: 0.8rem;
+    opacity: 0.9;
+    color: #fff;
+    font-weight: 500;
 }
 
 /* ========== WHATSAPP FLOAT ========== */
